@@ -9,10 +9,10 @@ jobs:
     - stage: build docker image
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t travis-ci-build-stages-demo .
+      - docker build -t usermgmt .
       - docker images
-      - docker tag $TRAVIS_BUILD_NUMBER" $DOCKER_USERNAME/usermgmt
-      - docker push $DOCKER_USERNAME/usermgmt
+      - docker tag usermgmt $DOCKER_USERNAME/usermgmt-$TRAVIS_BUILD_NUMBER
+      - docker push $DOCKER_USERNAME/usermgmt-$TRAVIS_BUILD_NUMBER
     - stage: test
       script:
       - nosetests
