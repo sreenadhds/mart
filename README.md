@@ -1,6 +1,6 @@
 # Usermanagement
 
-## Build status [![Build Status](https://travis-ci.com/sathish006/mart.svg?branch=master)]
+## Build status [![Build Status](https://travis-ci.com/sathish006/mart.svg?branch=master)](https://travis-ci.com/sathish006/mart/builds)
 
 ## Code coverage [![codecov](https://codecov.io/gh/sathish006/mart/branch/master/graph/badge.svg)](https://codecov.io/gh/sathish006/mart)
 
