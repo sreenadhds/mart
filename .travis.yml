@@ -4,9 +4,19 @@ python:
   - "2.7"
 install: "pip install -r requirements.txt"
 # command to run tests
-script:
-  - nosetests
-  - coverage run -m pytest  
+jobs:
+  include:
+    - stage: build docker image
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t travis-ci-build-stages-demo .
+      - docker images
+      - docker tag $TRAVIS_BUILD_NUMBER" $DOCKER_USERNAME/usermgmt
+      - docker push $DOCKER_USERNAME/usermgmt
+    - stage: test
+      script:
+      - nosetests
+      - coverage run -m pytest  
 after_success:
   - coverage report --omit=*lib* 
   - bash <(curl -s https://codecov.io/bash)
