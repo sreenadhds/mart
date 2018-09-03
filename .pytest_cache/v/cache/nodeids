@@ -1,0 +1,8 @@
+[
+  "swagger_server/test/test_server.py::Testserver::test_server_is_up_and_running", 
+  "swagger_server/test/test_user_controller.py::TestUserController::test_create_user", 
+  "swagger_server/test/test_user_controller.py::TestUserController::test_delete_user", 
+  "swagger_server/test/test_user_controller.py::TestUserController::test_get_user_by_name", 
+  "swagger_server/test/test_user_controller.py::TestUserController::test_login", 
+  "swagger_server/test/test_user_controller.py::TestUserController::test_update_user"
+]
