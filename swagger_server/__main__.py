@@ -17,7 +17,7 @@ logger = logging.getLogger('connexion.apis.flask_api')
 
 def initialise_db(app):
     global  db_session
-    globals.db_session=orm.init_db('mysql://root:root@localhost/dreamteam_db')
+    globals.db_session=orm.init_db('mysql://root:root@192.168.31.40/dreamteam_db')
 
 def init_logging(logger):
     """Initialize application logging."""
