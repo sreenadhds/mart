@@ -1,0 +1,50 @@
+version: '3.3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     ports:
+      - 3306:3306
+     env_file:
+       - ./compose/dbenv-variables.env
+   web:
+     image: usermgmt
+     restart: always
+     ports:
+       - 8080:8080
+       - 9000:9000
+     env_file:
+       - ./compose/dbenv-variables.env
+     environment:
+       - FLASK_ENV=development
+       - db_host=db
+     depends_on:
+       - db
+   prometheus:
+    image: quay.io/prometheus/prometheus:v2.0.0
+    volumes:
+     - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+    ports:
+     - 9090:9090
+    depends_on:
+     - exporter
+   exporter:
+    image: prom/node-exporter:latest
+    ports:
+     - "9100:9100"
+   grafana:
+    image: grafana/grafana
+    ports:
+     - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    depends_on:
+      - prometheus
+volumes:
+    db_data:
+    grafana_data:

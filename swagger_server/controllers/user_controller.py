@@ -40,7 +40,7 @@ def login_needed(f):
 
     return wrap
 
-@login_needed
+# @login_needed
 def create_user(body):  # noqa: E501
     """Create user
 

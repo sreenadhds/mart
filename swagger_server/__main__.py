@@ -5,10 +5,8 @@ import logging
 from swagger_server import encoder
 from swagger_server.models import orm
 from swagger_server import globals
-from werkzeug.wsgi import DispatcherMiddleware
-from prometheus_client import make_wsgi_app
-from prometheus_client import start_http_server
-from middlewares import setup_metrics
+from middlewares import setup_metrics,seed_data
+import os
 
 logger = logging.getLogger('connexion.apis.flask_api')
 
@@ -17,7 +15,7 @@ logger = logging.getLogger('connexion.apis.flask_api')
 
 def initialise_db(app):
     global  db_session
-    globals.db_session=orm.init_db('mysql://root:root@192.168.31.40/dreamteam_db')
+    globals.db_session=orm.init_db('mysql://root:root@'+os.getenv('db_host',"127.0.0.1")+'/dreamteam_db')
 
 def init_logging(logger):
     """Initialize application logging."""
@@ -36,6 +34,7 @@ def main():
     logger = logging.getLogger(__name__)
     init_logging(logger)
     initialise_db(app.app)
+    seed_data()
     setup_metrics(app.app)
     app.run(port=8080)
 
