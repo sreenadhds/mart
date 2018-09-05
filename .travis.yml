@@ -1,15 +1,15 @@
 # ref: https://docs.travis-ci.com/user/languages/python
-language: python
-python:
-  - "2.7"
-install: "pip install -r requirements.txt"
-# command to run tests
 branches:
   only:
     - master
     - develop
   except:
     - /^build-.*$/
+language: python
+python:
+  - "2.7"
+install: "pip install -r requirements.txt"
+# command to run tests
 jobs:
   include:
     - stage: build docker image
@@ -26,6 +26,7 @@ jobs:
       script:
       - coverage run -m pytest  
     - stage: tag
+      if: branch = master
       script:
       - git config --global user.email "builds@travis-ci.com"
       - export GIT_TAG=build-$TRAVIS_BRANCH-v$TRAVIS_BUILD_NUMBER
