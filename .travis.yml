@@ -13,10 +13,18 @@ jobs:
       - docker images
       - docker tag usermgmt $DOCKER_USERNAME/usermgmt-$TRAVIS_BUILD_NUMBER
       - docker push $DOCKER_USERNAME/usermgmt-$TRAVIS_BUILD_NUMBER
-    - stage: test
+    - stage: unit-test
       script:
       - nosetests
+    - stage: code-coverage
+      script:
       - coverage run -m pytest  
+    - stage: tag
+      script:
+      - git config --global user.email "builds@travis-ci.com"
+      - export GIT_TAG=build-$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER
+      - git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+      - git push origin $GIT_TAG
 after_success:
   - coverage report --omit=*lib* 
   - bash <(curl -s https://codecov.io/bash)
