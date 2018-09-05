@@ -4,6 +4,12 @@ python:
   - "2.7"
 install: "pip install -r requirements.txt"
 # command to run tests
+branches:
+  only:
+    - master
+    - develop
+  except:
+    - /^build-.*$/
 jobs:
   include:
     - stage: build docker image
@@ -19,6 +25,12 @@ jobs:
     - stage: code-coverage
       script:
       - coverage run -m pytest  
+    - stage: tag
+      script:
+      - git config --global user.email "builds@travis-ci.com"
+      - export GIT_TAG=build-$TRAVIS_BRANCH-v$TRAVIS_BUILD_NUMBER
+      - git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+      - git push --quiet https://$GITHUB_TOKEN@github.com/sathish006/mart  $GIT_TAG > /dev/null 2>&1
 after_success:
   - coverage report --omit=*lib* 
   - bash <(curl -s https://codecov.io/bash)
