@@ -11,7 +11,7 @@ services:
      env_file:
        - ./compose/dbenv-variables.env
    web:
-     image: usermgmt
+     image: sathee005/usermgmt:latest
      restart: always
      ports:
        - 8080:8080

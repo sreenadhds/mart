@@ -30,7 +30,7 @@ def login_needed(f):
             authenticated_token=parse_cookie(connexion.request.headers['Cookie'],'Autorization')
         if authenticated_token:
             try:
-                decode_val=decode_password_token(authenticated_token[0])
+                decode_val=decode_password_token(authenticated_token[0].split(';')[0])
                 logging.info("Authentication successful for user %s",decode_val['username'])
                 return f(*args, **kwargs)
             except Exception as e:
@@ -119,7 +119,7 @@ def get_user_by_name(username):  # noqa: E501
 
     return "Invalid username supplied", 400
 
-@login_needed
+# @login_needed
 def update_user(username, body):  # noqa: E501
     """Updated user
 

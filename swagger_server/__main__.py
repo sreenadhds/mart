@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 import connexion
-import logging
+from  swagger_server.util import get_config
 from swagger_server import encoder
 from swagger_server.models import orm
 from swagger_server import globals
 from middlewares import setup_metrics,seed_data
+import logging
+
 import os
 
 logger = logging.getLogger('connexion.apis.flask_api')
@@ -15,12 +17,13 @@ logger = logging.getLogger('connexion.apis.flask_api')
 
 def initialise_db(app):
     global  db_session
-    globals.db_session=orm.init_db('mysql://root:root@'+os.getenv('db_host',"127.0.0.1")+'/dreamteam_db')
+    globals.db_session=orm.init_db('mysql://'+get_config()['db_username']+':'+get_config()['db_password']+'@'+
+                                   get_config()['db_host']+'/'+get_config()['db_name'])
 
 def init_logging(logger):
     """Initialize application logging."""
     # Initialize flask logging
-    log_handler=logging.basicConfig(filename='/tmp/redmart.log',
+    log_handler=logging.basicConfig(filename='/tmp/mart.log',
                         filemode='a',
                         format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                         datefmt='%H:%M:%S',

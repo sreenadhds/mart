@@ -1,13 +1,19 @@
 import datetime
-
 import six
 import typing
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging
 logger = logging.getLogger('connexion.apis.flask_api')
 import jwt
-import Cookie
 import re
+import os
+from swagger_server.configs.config import *
+
+def get_config():
+    logging.info("Fetching config for %s environment",os.getenv('FLASK_ENV', "development"))
+    env = os.getenv('FLASK_ENV', "development")
+    config=eval(env)
+    return config
 
 
 def generate_cookie(k,v):
@@ -16,10 +22,11 @@ def generate_cookie(k,v):
 
 
 def encode_password_token(payload):
-    return jwt.encode(payload, 'nfjcnfjncjfn', algorithm='HS256')
+    return jwt.encode(payload,get_config()['secret_key'], algorithm='HS256')
 
 def decode_password_token(hash):
-    return jwt.decode(hash, 'nfjcnfjncjfn', algorithms=['HS256'])
+    logging.info("Got hash %s ",hash)
+    return jwt.decode(hash, get_config()['secret_key'], algorithms=['HS256'])
 
 def generate_hash(password):
     return  generate_password_hash(password)

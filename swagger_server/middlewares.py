@@ -8,6 +8,7 @@ from configs.config import *
 from swagger_server import globals
 import os
 import logging
+from  swagger_server.util import get_config
 
 
 FLASK_REQUEST_LATENCY = Histogram('flask_request_latency_seconds', 'Flask Request Latency',
@@ -29,16 +30,13 @@ def after_request(response):
 def setup_metrics(app):
     app.before_request(before_request)
     app.after_request(after_request)
-    start_http_server(9000)
+    start_http_server(get_config()['metrics_port'])
 
 
 def seed_data():
-    env=os.getenv('FLASK_ENV',"development")
-    logging.info(env)
-    admin_config=eval(env)
-    user = {"dao_username": admin_config['admin_username'], "dao_firstname": "admin",
+    user = {"dao_username": get_config()['admin_username'], "dao_firstname": "admin",
             "dao_lastname": "admin", "dao_email": "admin@example.com",
-            "dao_password": admin_config['admin_hash'], "id": "1000099"}
+            "dao_password": get_config()['admin_hash'], "id": "1000099"}
     try:
         globals.db_session.add(orm.Userinfo(**user))
         globals.db_session.commit()
